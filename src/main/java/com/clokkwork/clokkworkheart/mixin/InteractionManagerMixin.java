@@ -32,15 +32,15 @@ public class InteractionManagerMixin {
     private static final ThreadLocal<Object[]> HYX_TIME_CTX = new ThreadLocal<>();
 
     @Unique
-    public static final CopyOnWriteArrayList<ToDoubleFunction<Object[]>> HYX_COOLDOWN_SCALARS
+    private static final CopyOnWriteArrayList<ToDoubleFunction<Object[]>> clokkworkHeart$HYX_COOLDOWN_SCALARS
             = new CopyOnWriteArrayList<>();
 
     @Unique
-    public static final CopyOnWriteArrayList<ToDoubleFunction<Object[]>> HYX_TIME_SCALARS
+    private static final CopyOnWriteArrayList<ToDoubleFunction<Object[]>> clokkworkHeart$HYX_TIME_SCALARS
             = new CopyOnWriteArrayList<>();
 
     @Unique
-    public static double clokkworkHeart$clamp(double value, double min, double max) {
+    private static double clokkworkHeart$clamp(double value, double min, double max) {
         if(!Double.isFinite(value)) return 1.0;
         if(value < min) return min;
         if(value > max) return max;
@@ -62,7 +62,7 @@ public class InteractionManagerMixin {
                 this.commandBuffer, ref, type, root,  cooldownId, cooldownSecs, remote
         };
         double mult = 1.0;
-        for(ToDoubleFunction<Object[]> func : HYX_COOLDOWN_SCALARS) {
+        for(ToDoubleFunction<Object[]> func : clokkworkHeart$HYX_COOLDOWN_SCALARS) {
             try {
                 double m = func.applyAsDouble(ctx);
                 if(Double.isFinite(m) && m > 0.0) mult *= m;
@@ -193,7 +193,7 @@ public class InteractionManagerMixin {
                 (long) ctx[2]
         };
         double mult = 1.0;
-        for(ToDoubleFunction<Object[]> f : HYX_TIME_SCALARS) {
+        for(ToDoubleFunction<Object[]> f : clokkworkHeart$HYX_TIME_SCALARS) {
             try {
                 double m = f.applyAsDouble(args);
                 if(Double.isFinite(m) && m > 0.0) mult *= m;

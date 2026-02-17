@@ -1,0 +1,6 @@
+{
+  "InitialValue": 1.0,
+  "Min": 0.1,
+  "Max": 10.0,
+  "Shared": false
+}

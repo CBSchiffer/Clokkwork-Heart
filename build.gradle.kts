@@ -29,14 +29,14 @@ repositories {
 dependencies {
     compileOnly(libs.jetbrains.annotations)
     compileOnly(libs.jspecify)
-    implementation("curse.maven:hyxin-1405491:7399430")
+    compileOnly("curse.maven:hyxin-1405491:7399430")
 }
 
 hytale {
     // uncomment if you want to add the Assets.zip file to your external libraries;
     // ⚠️ CAUTION, this file is very big and might make your IDE unresponsive for some time!
     //
-    // addAssetsDependency = true
+     addAssetsDependency = true
 
     // uncomment if you want to develop your mod against the pre-release version of the game.
     //
@@ -50,6 +50,7 @@ java {
 
     withSourcesJar()
 }
+
 
 tasks.named<ProcessResources>("processResources") {
     var replaceProperties = mapOf(
@@ -106,6 +107,7 @@ idea {
     }
 }
 
+
 val syncAssets = tasks.register<Copy>("syncAssets") {
     group = "hytale"
     description = "Automatically syncs assets from Build back to Source after server stops."
@@ -134,6 +136,14 @@ afterEvaluate {
     if (targetTask != null) {
         targetTask.finalizedBy(syncAssets)
         logger.lifecycle("✅ specific task '${targetTask.name}' hooked for auto-sync.")
+
+        (targetTask as? JavaExec)?.let { exec ->
+            // Only add if not already present (prevents duplicates)
+            if (!exec.args.orEmpty().contains("--accept-early-plugins")) {
+                exec.args("--accept-early-plugins")
+                logger.lifecycle("✅ Added '--accept-early-plugins' to '${exec.name}' args.")
+            }
+        } ?: logger.warn("⚠️ Task '${targetTask.name}' is not a JavaExec; cannot append JVM args here.")
     } else {
         logger.warn("⚠️ Could not find 'runServer' or 'server' task to hook auto-sync into.")
     }
@@ -142,24 +152,24 @@ afterEvaluate {
 
 // Change this if your run directory is different.
 // Most setups use "./run" or "./server". Try "run" first.
-val hytaleRunDir = layout.projectDirectory.dir("run")
-
-val pluginsDir = hytaleRunDir.dir("plugins")
-val earlyPluginsDir = hytaleRunDir.dir("early-plugins")
-
-tasks.register<Copy>("deployToRunFolders") {
-    // Ensure jar exists
-    dependsOn(tasks.named("jar"))
-
-    // Create folders if missing
-    doFirst {
-        pluginsDir.asFile.mkdirs()
-        earlyPluginsDir.asFile.mkdirs()
-    }
-
-    // Copy built jar -> plugins/
-    from(tasks.named<Jar>("jar").flatMap { it.archiveFile })
-    into(earlyPluginsDir)
+//val hytaleRunDir = layout.projectDirectory.dir("run")
+//
+//val pluginsDir = hytaleRunDir.dir("plugins")
+//val earlyPluginsDir = hytaleRunDir.dir("earlyplugins")
+//
+//tasks.register<Copy>("deployToRunFolders") {
+//    // Ensure jar exists
+//    dependsOn(tasks.named("jar"))
+//
+//    // Create folders if missing
+//    doFirst {
+//        pluginsDir.asFile.mkdirs()
+//        earlyPluginsDir.asFile.mkdirs()
+//    }
+//
+//    // Copy built jar -> plugins/
+//    from(tasks.named<Jar>("jar").flatMap { it.archiveFile })
+//    into(earlyPluginsDir)
 
     // Also copy built jar -> earlyplugins/
 //    doLast {
@@ -168,7 +178,7 @@ tasks.register<Copy>("deployToRunFolders") {
 //            into(earlyPluginsDir)
 //        }
 //    }
-}
+//}
 
 //// Make sure runServer always deploys first
 //tasks.named("hytale::runServer") {
