@@ -80,6 +80,7 @@ public class InteractionManagerMixin {
             boolean remote,
             CallbackInfoReturnable<Boolean> cir) {
         HYX_CTX.set(new Object[] { ref, type, root, remote });
+//        System.out.println("clokkworkHeart$cooldownCtxHead: Data stored!");
     }
 
     @Inject(method = "isOnCooldown", at = @At("RETURN"))
@@ -90,6 +91,7 @@ public class InteractionManagerMixin {
             boolean remote,
             CallbackInfoReturnable<Boolean> cir) {
         HYX_CTX.remove();
+//        System.out.println("clokkworkHeart$cooldownCtxReturn: Data done.");
     }
 
     @Redirect(
@@ -152,6 +154,7 @@ public class InteractionManagerMixin {
         Object[] ctx = HYX_CTX.get();
         float scaled = clokkworkHeart$applyCooldownScalar((Ref<EntityStore>) ctx[0], (InteractionType) ctx[1], (RootInteraction) ctx[2], id, maxTime, (boolean) ctx[3]);
         handler.resetCooldown(id, scaled, chargeTimes, interruptRecharge);
+//        System.out.println("clokkworkHeart$redirect_resetCooldown1: Reset cooldown called!");
     }
 
     @Inject(method = "serverTick", at = @At("HEAD"))
@@ -178,7 +181,6 @@ public class InteractionManagerMixin {
 
         Object[] ctx = HYX_TIME_CTX.get();
         if (ctx == null) return base;
-
         InteractionType type = ((InteractionChain) ctx[1]).getType();
         if(!clokkworkHeart$isHeldWeapon(type)) return base;
 

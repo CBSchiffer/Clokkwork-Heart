@@ -27,12 +27,12 @@ public final class ScalarPlatform {
 
     public static void registerCooldownScalar(ToDoubleFunction<Object[]> fn) {
         CopyOnWriteArrayList<ToDoubleFunction<Object[]>> list = getList("clokkworkHeart$HYX_COOLDOWN_SCALARS");
-        if(list == null) list.add(fn);
+        if(list != null) list.add(fn);
     }
 
     public static void registerTimeScalar(ToDoubleFunction<Object[]> fn) {
         CopyOnWriteArrayList<ToDoubleFunction<Object[]>> list = getList("clokkworkHeart$HYX_TIME_SCALARS");
-        if(list == null) list.add(fn);
+        if(list != null) list.add(fn);
     }
 
 }
